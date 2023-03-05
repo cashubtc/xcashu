@@ -10,6 +10,8 @@ from xcashu.server.router import router
 from xcashu.server.ledger import csat_router, ledger
 
 from cashu.core.base import TokenV2
+from cashu.core.settings import LIGHTNING
+
 import json
 import base64
 
@@ -25,7 +27,10 @@ class EcashHeaderMiddleware(BaseHTTPMiddleware):
             # check whether valid ecash was provided in header
             token = request.headers.get("X-Cashu")
             if not token:
-                payment_request, payment_hash = await ledger.request_mint(1000)
+                if LIGHTNING:
+                    payment_request, payment_hash = await ledger.request_mint(1000)
+                else:
+                    payment_request, payment_hash = "payment_request", "payment_hash"
                 return JSONResponse(
                     {
                         "detail": "This endpoint requires a X-Cashu ecash header",
