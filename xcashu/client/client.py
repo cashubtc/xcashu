@@ -11,7 +11,7 @@ from cashu.core.helpers import sum_proofs
 
 base_url = "http://127.0.0.1:8000"
 s = requests.Session()
-VERBOSE = False
+VERBOSE = True
 
 import time
 
