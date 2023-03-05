@@ -3,7 +3,7 @@ from typing import Union
 from cashu.mint.ledger import Ledger
 from cashu.core.migrations import migrate_databases
 from cashu.mint import migrations
-from cashu.core.settings import CASHU_DIR, LIGHTNING, MINT_PRIVATE_KEY
+from cashu.core.settings import MINT_PRIVATE_KEY
 from cashu.core.db import Database
 from cashu.lightning.lnbits import LNbitsWallet  # type: ignore
 from cashu.core.base import (
@@ -22,14 +22,18 @@ ledger = Ledger(
     derivation_path="0/0/0/0",
     lightning=LNbitsWallet(),
 )
+
+
 async def startup_cashu_mint():
     await migrate_databases(ledger.db, migrations)
     await ledger.load_used_proofs()
     await ledger.init_keysets(autosave=False)
 
+
 from fastapi import APIRouter
 
-csat_router: APIRouter = APIRouter(prefix="/csat")
+csat_router: APIRouter = APIRouter(prefix="/cashu")
+
 
 @csat_router.get(
     "/keys",
@@ -41,6 +45,7 @@ async def keys() -> KeysResponse:
     keyset = ledger.get_keyset()
     keys = KeysResponse.parse_obj(keyset)
     return keys
+
 
 @csat_router.get("/mint", name="Request mint", summary="Request minting of new tokens")
 async def request_mint(amount: int = 0) -> GetMintResponse:
