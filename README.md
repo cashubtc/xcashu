@@ -7,7 +7,7 @@ X-Cashu – HTTP 402: Payment Required
 
 # Install
 - Install Python and Poetry environments as described here: https://github.com/cashubtc/cashu
-- Run LNbits instance (Lightning backend)
+- Run LNbits instance (Lightning backend) if you do not set `LIGHTNING=False` in `.env` (see below)
 - Edit `.env` file as needed
 
 ```sh
